@@ -2,8 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# SQLite en memoria - datos se pierden al cerrar API (ideal para demos)
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+# SQLite en archivo local - persiste entre reinicios y funciona con --reload
+# Usa archivo `test.db` en el directorio del proyecto
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 # check_same_thread=False permite usar SQLite desde múltiples threads
 engine = create_engine(
@@ -29,6 +30,11 @@ def init_db():
 def seed_data(db):
     """Inserta datos iniciales para demostración"""
     from app.models.cliente import Cliente, EstadoCliente
+    # No seed si ya existen clientes (evita IntegrityError en reinicios)
+    existing = db.query(Cliente).first()
+    if existing:
+        print("⚠️ Clientes ya existen en la base de datos, no se realizará seed.")
+        return
     
     clientes_demo = [
         Cliente(

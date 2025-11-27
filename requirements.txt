@@ -1,8 +1,55 @@
+# ============================================
+# API REST Framework
+# ============================================
+# FastAPI: Framework web moderno y rápido para construir APIs REST con Python
+# Incluye validación automática, documentación interactiva (Swagger UI) y serialización JSON
 fastapi==0.104.1
+
+# ============================================
+# Servidor ASGI
+# ============================================
+# Uvicorn: Servidor ASGI de alto rendimiento para ejecutar aplicaciones FastAPI
+# [standard] incluye dependencias adicionales (watchfiles, websockets, httptools)
+# para desarrollo con hot-reload y soporte completo de protocolos
 uvicorn[standard]==0.24.0
+
+# ============================================
+# ORM y Base de Datos
+# ============================================
+# SQLAlchemy: ORM (Object-Relational Mapping) para interactuar con bases de datos SQL
+# Permite definir modelos como clases Python y generar consultas SQL automáticamente
+# Compatible con SQLite, PostgreSQL, MySQL, etc.
 sqlalchemy==2.0.23
+
+# ============================================
+# Validación y Serialización
+# ============================================
+# Pydantic: Librería para validación de datos usando type hints de Python
+# Valida automáticamente tipos de datos en requests/responses
+# Genera schemas JSON y documentación de modelos
 pydantic==2.4.2
+
+# ============================================
+# Datos de Prueba
+# ============================================
+# Faker: Generador de datos falsos para testing y desarrollo
+# Crea nombres, emails, direcciones, números aleatorios de forma realista
 faker==20.1.0
+
+# ============================================
+# Testing
+# ============================================
+# pytest: Framework de testing más popular para Python
+# Permite escribir y ejecutar tests unitarios, de integración y funcionales
+# Sintaxis simple y poderosas funcionalidades (fixtures, parametrización, etc.)
 pytest==7.4.3
+
+# httpx: Cliente HTTP asíncrono y síncrono para Python
+# Usado en tests para hacer peticiones HTTP a la API sin necesidad de servidor externo
+# Compatible con TestClient de FastAPI
 httpx==0.25.2
+
+# pytest-cov: Plugin de pytest para medir cobertura de código
+# Genera reportes de qué porcentaje del código está cubierto por tests
+# Ayuda a identificar código sin testear
 pytest-cov==4.1.0

@@ -10,9 +10,8 @@ __pycache__/
 *$py.class
 
 # SQLite database
-# Ignora la mayoría de archivos .db, pero permitir el archivo de demo `test.db`
 *.db
-!/test.db
+test.db
 
 # Editor/IDE
 .vscode/

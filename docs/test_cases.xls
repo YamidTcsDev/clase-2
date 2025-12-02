@@ -1,0 +1,28 @@
+<html>
+<head><meta charset="utf-8"/></head>
+<body>
+<table border="1">
+<tr><th>ID</th><th>Escenario</th><th>Pre-condiciones</th><th>Pasos</th><th>Resultado Esperado</th><th>Prioridad</th><th>Datos de Prueba</th></tr>
+<tr><td>TP-01</td><td>Path feliz: cliente con buen historial</td><td>Cliente en BD: id=1001; score_cifin=750; estado=activo</td><td>POST /api/bureau/consultar {cliente_id:1001}</td><td>200 OK; score=750; tiene_historial=true; puntualidad=Buena</td><td>Alta</td><td>cliente_id=1001</td></tr>
+<tr><td>TP-02</td><td>Cliente con deudas activas</td><td>Cliente en BD: id=1002; score_cifin=680</td><td>POST /api/bureau/consultar {cliente_id:1002}</td><td>200 OK; deudas_activas>0; monto_deudas>0</td><td>Alta</td><td>cliente_id=1002</td></tr>
+<tr><td>TP-03</td><td>Cliente en lista de riesgo CIFIN</td><td>Cliente en BD: id=1003; estado=bloqueado</td><td>POST /api/bureau/consultar {cliente_id:1003}</td><td>403 Forbidden; detalle 'Consulta bloqueada'</td><td>Crítica</td><td>cliente_id=1003</td></tr>
+<tr><td>TP-04</td><td>Validación: documento inválido</td><td>Ninguna</td><td>POST /api/bureau/consultar {cliente_id:'ABC123'}</td><td>422 Unprocessable Entity; error de validación</td><td>Media</td><td>payload={'cliente_id':'ABC123'}</td></tr>
+<tr><td>TP-05</td><td>Manejo error: servicio externo caído</td><td>Simular caída del servicio externo</td><td>POST /api/bureau/consultar {cliente_id:1010}</td><td>502/503; mensaje claro 'Servicio de bureau no disponible'</td><td>Crítica</td><td>cliente_id=1010 (simular caída)</td></tr>
+<tr><td>TP-06</td><td>Manejo timeout 5s</td><td>Simular latencia &gt;5s en integración</td><td>POST /api/bureau/consultar {cliente_id:1011}</td><td>504 Gateway Timeout o manejo equivalente</td><td>Alta</td><td>cliente_id=1011 (simular latencia)</td></tr>
+<tr><td>TP-07</td><td>Respuesta inválida del servicio externo</td><td>Integración devuelve JSON malformado</td><td>POST /api/bureau/consultar {cliente_id:1012}</td><td>500/502; API maneja y devuelve error manejable</td><td>Alta</td><td>cliente_id=1012 (simular payload inválido)</td></tr>
+<tr><td>TP-08</td><td>Documento duplicado (edge)</td><td>DB con duplicidad de identificación (simular)</td><td>Flujo que provoque búsqueda por identificación duplicada</td><td>409 Conflict o 400 con mensaje; no devolver datos sensibles</td><td>Baja</td><td>identificacion=80012345 (duplicada)</td></tr>
+<tr><td>TP-09</td><td>Cliente extranjero</td><td>Cliente en BD: id=2001; identificacion='EXT-999'; score_cifin=NULL</td><td>POST /api/bureau/consultar {cliente_id:2001}</td><td>200 OK; score=0; tiene_historial=false; mensaje sugiere verificación adicional</td><td>Media</td><td>cliente_id=2001; identificacion=EXT-999</td></tr>
+<tr><td>TP-10</td><td>Sin historial (cliente nuevo)</td><td>Cliente en BD: id=1004; score_cifin=NULL</td><td>POST /api/bureau/consultar {cliente_id:1004}</td><td>200 OK; score=0; tiene_historial=false; mensaje 'Sin historial'</td><td>Media</td><td>cliente_id=1004</td></tr>
+<tr><td>TP-11</td><td>GET última consulta existente</td><td>Existe consulta mock para cliente id=1</td><td>GET /api/bureau/1</td><td>200 OK; BureauResponse con cliente_id=1</td><td>Baja</td><td>cliente_id=1</td></tr>
+<tr><td>TP-12</td><td>GET última consulta no existente</td><td>No existe cliente id=9999</td><td>GET /api/bureau/9999</td><td>404 Not Found con detalle 'Cliente no encontrado'</td><td>Alta</td><td>cliente_id=9999</td></tr>
+<tr><td>TP-13</td><td>Límite consultas (&gt;1 en 24h)</td><td>Cliente id=1005 consultado en últimas 24h</td><td>POST /api/bureau/consultar {cliente_id:1005}</td><td>429 Too Many Requests; mensaje 'Límite de consultas'</td><td>Alta</td><td>cliente_id=1005 (marcar como ya consultado)</td></tr>
+<tr><td>TP-14</td><td>Input boundary: cliente_id negativo</td><td>Ninguna</td><td>POST /api/bureau/consultar {cliente_id:-1}</td><td>400/422; validación o 'Cliente no encontrado'</td><td>Baja</td><td>cliente_id=-1</td></tr>
+<tr><td>TP-15</td><td>Payload incompleto (campo requerido faltante)</td><td>Ninguna</td><td>POST /api/bureau/consultar {}</td><td>422 Unprocessable Entity; error por campo requerido</td><td>Media</td><td>payload={}</td></tr>
+<tr><td>TP-16</td><td>Performance: latencia individual aceptable</td><td>Cliente id=1001 preparado</td><td>POST /api/bureau/consultar {cliente_id:1001}</td><td>200 OK; tiempo de respuesta &lt; 200ms</td><td>Alta</td><td>cliente_id=1001; threshold_ms=200</td></tr>
+<tr><td>TP-17</td><td>Performance: concurrencia sostenida 50 usuarios</td><td>Clientes preparados varios ids (1001..1050)</td><td>50 concurrent POST requests to /api/bureau/consultar</td><td>95th percentile latency &lt; 500ms; error rate &lt; 1%</td><td>Crítica</td><td>concurrency=50; duration=30s; ids range</td></tr>
+<tr><td>TP-18</td><td>Performance: pico de tráfico (spike)</td><td>Servidor monitoreado</td><td>Burst 200 requests en 10s</td><td>Sistema se mantiene estable; error rate &lt; 5%; degradación graceful</td><td>Alta</td><td>spike=200 in 10s</td></tr>
+<tr><td>TP-19</td><td>Performance: throughput sostenido</td><td>Carga sostenida 10 req/s por 5min</td><td>POSTs continuos</td><td>Throughput &gt;=10 req/s; median latency aceptable (&lt;300ms)</td><td>Media</td><td>rate=10/s; duration=300s</td></tr>
+<tr><td>TP-20</td><td>Performance: carga con datos mixtos (stress)</td><td>Clientes variados, algunos sin historial</td><td>Mixture of valid/invalid payloads concurrent</td><td>No crashes; error rate documentado; observe tail latency</td><td>Crítica</td><td>mix: 80% valid, 10% invalid, 10% malformed; concurrency=100</td></tr>
+</table>
+</body>
+</html>

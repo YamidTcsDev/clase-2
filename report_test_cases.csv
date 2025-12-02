@@ -1,0 +1,15 @@
+ID,Escenario,Estado,Esperado,Obtenido,Tiempo (ms),Notas,Fecha
+TC-BC-001,Cliente con buen historial crediticio,PASS,"Status 200, Score 750, historial=true","Status 200, Score 750, historial=True",2223.5,,2025-12-02 07:52:56
+TC-BC-002,Cliente sin historial crediticio,PASS,"Status 200, Score 0, historial=false","Status 200, Score 0, historial=False",2030.95,,2025-12-02 07:52:58
+TC-BC-003,Cliente bloqueado en lista de riesgo,FAIL,Status 403,Status ERROR,2043.38,,2025-12-02 07:53:00
+TC-BC-004,Cliente inexistente,FAIL,Status 400,Status ERROR,2062.94,,2025-12-02 07:53:02
+TC-BC-005,Obtener última consulta (GET),PASS,"Status 200, cliente_id=1","Status 200, cliente_id=1",2059.91,,2025-12-02 07:53:04
+TC-PR-001,Préstamo aprobado automáticamente,PASS,"Status 200, estado=aprobado","Status 200, estado=aprobado",2067.2,,2025-12-02 07:53:06
+TC-PR-002,Préstamo rechazado (score bajo),PASS,"Status 200, estado=rechazado","Status 200, estado=rechazado, motivo=Score crediticio insuficiente (< 500)",2081.04,,2025-12-02 07:53:08
+TC-PR-003,Validación límite de monto excedido,FAIL,Status 400,Status ERROR,2065.56,,2025-12-02 07:53:10
+TC-PR-004,Préstamo requiere revisión manual,PASS,"Status 200, estado=en_revision","Status 200, estado=en_revision",2059.04,,2025-12-02 07:53:12
+TC-PR-005,Préstamo rechazado sin historial,PASS,"Status 200, estado=rechazado, motivo=sin historial","Status 200, estado=rechazado, motivo=Cliente sin historial crediticio",2081.57,,2025-12-02 07:53:14
+TC-PR-006,Consultar estado de préstamo,PASS,"Status 200, id=5","Status 200, id=5, estado=aprobado",2061.32,,2025-12-02 07:53:18
+TC-PR-007,Consultar préstamo inexistente,FAIL,Status 404,Status ERROR,2071.13,,2025-12-02 07:53:20
+TC-SYS-001,Health check del sistema,PASS,"Status 200, status=OK","Status 200, status=OK",2065.61,,2025-12-02 07:53:22
+TC-SYS-002,Endpoint raíz,PASS,"Status 200, contiene 'message'","Status 200, message=API Test Cases - Clase 2",2054.52,,2025-12-02 07:53:24
